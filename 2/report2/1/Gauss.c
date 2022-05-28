@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-void matlixOuput(int n,double *matlix);
-void pivot(int n,int j,double *matlix);
+void matlixOuput(int n,double *matlix, double *b);
+void pivot(int n,int j,double *matlix,double *b);
 
 
 
@@ -17,21 +17,15 @@ int main(int argc, char const *argv[]){
         { 3 , -3 , 4 },
     };
 
-    // double b[1][3] = {
-    //     {2007},
-    //     {4105},
-    //     {6052},
-    // };
-
     double b[] = {2007,4105,6052};
 
     // pivot(n,0,matlix);
-    matlixOuput(n,matlix);
+    matlixOuput(n,matlix,b);
 
 
 //////////////////////////////////////////////under in the works
     for(int j=0;j<n;j++){
-        pivot(n,j,matlix);
+        pivot(n,j,matlix,b);
         for(int i=j+1;i<n;i++){
             double  m = matlix[i][j]/matlix[j][j];
 
@@ -48,7 +42,7 @@ int main(int argc, char const *argv[]){
             b[i] = b[i] - m*b[j];
             printf("m = %lf\n",m);
             printf("%lf = %lf - %lf * %lf\n",b[i],tmp,m,b[j]);
-            matlixOuput(n,matlix);
+            matlixOuput(n,matlix,b);
            
 
         }
@@ -65,13 +59,14 @@ int main(int argc, char const *argv[]){
 
 
 
-void matlixOuput(int n,double *matlix){
+void matlixOuput(int n,double *matlix,double *b){
 
     for(int i=0;i<n;i++){
         if(n == 1) printf("|");
         else if(i==0) printf("/");
         else if(i==n-1) printf("\\");
         else printf("|");
+
         
         for(int j=0;j<n;j++){
             printf("  %3.3lf  ",*(matlix+(n*i)+j));
@@ -81,6 +76,9 @@ void matlixOuput(int n,double *matlix){
         else if(i==0) printf("\\");
         else if(i==n-1) printf("/");
         else printf("|");
+
+        printf("  =  ");
+        printf("%lf",*(b+i));
         
         puts("");
     }
@@ -88,18 +86,22 @@ void matlixOuput(int n,double *matlix){
 }
 
 
-void pivot(int n,int j,double *matlix){
-    double tmp;
+void pivot(int n,int j,double *matlix,double *b){
+    double tmp_matlix;
+    double tmp_b;
   
-        for(int k=0;k<n;k++){
+        for(int k=j;k<n;k++){
             //バブルソース
             for(int l=k+1;l<n;l++){
                 if(fabs(*(matlix+(n*k)+j)) < fabs(*(matlix+(n*l)+j))){
                     //配列の入れ替え
+                    tmp_b = *(b+l);
+                    *(b+l) = *(b+k);
+                    *(b+k) = tmp_b;
                     for(int m=0;m<n;m++){
-                        tmp = *(matlix+(n*l)+j+m);
+                        tmp_matlix = *(matlix+(n*l)+j+m);
                         *(matlix+(n*l)+j+m) = *(matlix+(n*k)+j+m);
-                        *(matlix+(n*k)+j+m) = tmp;
+                        *(matlix+(n*k)+j+m) = tmp_matlix;
                     }
                 }
             }
