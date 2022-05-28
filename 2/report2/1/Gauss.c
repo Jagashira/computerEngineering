@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <math.h>
 
+
 void matlixOuput(int n,double *matlix, double *b);
 void pivot(int n,int j,double *matlix,double *b);
-
-
+void x_calc(double *matlix,double *b,int n);
 
 int main(int argc, char const *argv[]){
 
@@ -19,11 +19,9 @@ int main(int argc, char const *argv[]){
 
     double b[] = {2007,4105,6052};
 
-    // pivot(n,0,matlix);
     matlixOuput(n,matlix,b);
 
 
-//////////////////////////////////////////////under in the works
     for(int j=0;j<n;j++){
         pivot(n,j,matlix,b);
         for(int i=j+1;i<n;i++){
@@ -31,28 +29,16 @@ int main(int argc, char const *argv[]){
 
             for(int k=0;k<n;k++){
                 matlix[i][k] -= m * matlix[j][k];
-                
-                // if(j==0){
-                //     printf("%lf\n",matlix[i][k]);
-                //     printf("%lf\n",matlix[i][j]);
-                //     printf("%lf\n",m);
-                // }
             }
             double tmp = b[i];
             b[i] = b[i] - m*b[j];
-            printf("m = %lf\n",m);
-            printf("%lf = %lf - %lf * %lf\n",b[i],tmp,m,b[j]);
-            matlixOuput(n,matlix,b);
-           
-
+            
+        
         }
     }
-    printf("%lf\n",matlix[0][0]);
-    printf("%lf\n",b[2]);
-////////////////////////////////////////////////////
+    matlixOuput(n,matlix,b);
 
-    
-
+    x_calc(matlix,b,n);
 
     return 0;
 }
@@ -108,3 +94,29 @@ void pivot(int n,int j,double *matlix,double *b){
         }
 
 }
+void x_calc(double *pMatlix,double *b,int n){
+    double x[3];
+    // double b[3] = *pB;
+    // double matlix[3][3] = *pMatlix;
+
+    for(int i=2;i>=0;i--){
+        double sigma = 0;
+        for(int j=0;j<n;j++){
+            // sigma += matlix[i][j]*x[j];
+            sigma += (*(pMatlix+(n*i)+j))*x[j];
+            printf("i = %d j = %d  pMatlix = %lf  x = %lf\n",i,j,*(pMatlix+(i*j)),x[j]);
+
+        }
+        // x[i] = (b[i]-sigma)/matlix[i][i];
+
+        printf("x[%d] =   \nALP =  %lf \nsigma = %lf  \nunder = %lf",i,*(b+i),sigma,*(pMatlix+(i*n)+i));
+        x[i] = ((*(b+i))-sigma)/(*(pMatlix+(i*n)+i));
+
+
+    }
+
+    for(int i=0;i<n;i++){
+        printf("\n%lf\n",x[i]);
+    }
+}
+//
