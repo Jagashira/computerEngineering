@@ -19,6 +19,7 @@ int main(int argc, char const *argv[]){
 
     double b[] = {2007,4105,6052};
 
+    puts("original");
     matlixOuput(n,matlix,b);
 
 
@@ -36,6 +37,7 @@ int main(int argc, char const *argv[]){
         
         }
     }
+    puts("calclation");
     matlixOuput(n,matlix,b);
 
     x_calc(matlix,b,n);
@@ -48,20 +50,10 @@ int main(int argc, char const *argv[]){
 void matlixOuput(int n,double *matlix,double *b){
 
     for(int i=0;i<n;i++){
-        if(n == 1) printf("|");
-        else if(i==0) printf("/");
-        else if(i==n-1) printf("\\");
-        else printf("|");
-
-        
+    
         for(int j=0;j<n;j++){
             printf("  %3.3lf  ",*(matlix+(n*i)+j));
         }
-
-        if(n == 1) printf("|");
-        else if(i==0) printf("\\");
-        else if(i==n-1) printf("/");
-        else printf("|");
 
         printf("  =  ");
         printf("%lf",*(b+i));
@@ -94,29 +86,22 @@ void pivot(int n,int j,double *matlix,double *b){
         }
 
 }
+
+
 void x_calc(double *pMatlix,double *b,int n){
     double x[3];
-    // double b[3] = *pB;
-    // double matlix[3][3] = *pMatlix;
 
     for(int i=2;i>=0;i--){
         double sigma = 0;
+
         for(int j=0;j<n;j++){
-            // sigma += matlix[i][j]*x[j];
             sigma += (*(pMatlix+(n*i)+j))*x[j];
-            printf("i = %d j = %d  pMatlix = %lf  x = %lf\n",i,j,*(pMatlix+(i*j)),x[j]);
-
         }
-        // x[i] = (b[i]-sigma)/matlix[i][i];
-
-        printf("x[%d] =   \nALP =  %lf \nsigma = %lf  \nunder = %lf",i,*(b+i),sigma,*(pMatlix+(i*n)+i));
         x[i] = ((*(b+i))-sigma)/(*(pMatlix+(i*n)+i));
-
 
     }
 
     for(int i=0;i<n;i++){
-        printf("\n%lf\n",x[i]);
+        printf("x[%d] = %.2lf\n",i+1,x[i]);
     }
 }
-//
