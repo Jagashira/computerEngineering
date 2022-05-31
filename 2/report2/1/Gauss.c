@@ -20,11 +20,11 @@ int main(int argc, char const *argv[]){
     double b[] = {2007,4105,6052};
 
     puts("original");
-    matlixOuput(n,matlix,b);
+    matlixOuput(n,*matlix,b);
 
 
     for(int j=0;j<n;j++){
-        pivot(n,j,matlix,b);
+        pivot(n,j,*matlix,b);
         for(int i=j+1;i<n;i++){
             double  m = matlix[i][j]/matlix[j][j];
 
@@ -38,9 +38,9 @@ int main(int argc, char const *argv[]){
         }
     }
     puts("calclation");
-    matlixOuput(n,matlix,b);
+    matlixOuput(n,*matlix,b);
 
-    x_calc(matlix,b,n);
+    x_calc(*matlix,b,n);
 
     return 0;
 }
@@ -89,7 +89,7 @@ void pivot(int n,int j,double *matlix,double *b){
 
 
 void x_calc(double *pMatlix,double *b,int n){
-    double x[3];
+    double x[3] ={};
 
     for(int i=2;i>=0;i--){
         double sigma = 0;
@@ -102,6 +102,6 @@ void x_calc(double *pMatlix,double *b,int n){
     }
 
     for(int i=0;i<n;i++){
-        printf("x[%d] = %.2lf\n",i+1,x[i]);
+        printf("x[%d] = %.2f\n",i+1,*(x+i));
     }
 }
