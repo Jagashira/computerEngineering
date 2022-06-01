@@ -1,122 +1,72 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+#include<stdio.h>
 
-
-void matlixOuput(int n,double *matlix, double *b);
-void pivot(int n,int j,double *matlix,double *b);
-void x_calc(double *matlix,double *b,int n);
-
-int main(int argc, char const *argv[]){
-
-    int n = 3;
-    
-    double matlix[3][3] = {
+int main()
+{   
+ 
+    double a[10][10] = {
         { 1 , -2 ,-3 },
         { 2 , 10 , 1 },
         { 3 , -3 , 4 },
     };
-
-    double b[] = {2007,4105,6052};
-
-    matlixOuput(n,matlix,b);
-
-
-    for(int j=0;j<n;j++){
-        pivot(n,j,matlix,b);
-        for(int i=j+1;i<n;i++){
-            double  m = matlix[i][j]/matlix[j][j];
-
-            for(int k=0;k<n;k++){
-                matlix[i][k] -= m * matlix[j][k];
-            }
-            double tmp = b[i];
-            b[i] = b[i] - m*b[j];
-            
-        
-        }
-    }
-    matlixOuput(n,matlix,b);
-
-    x_calc(matlix,b,n);
-
-    return 0;
-}
-
-
-
-void matlixOuput(int n,double *matlix,double *b){
-
-    for(int i=0;i<n;i++){
-        if(n == 1) printf("|");
-        else if(i==0) printf("/");
-        else if(i==n-1) printf("\\");
-        else printf("|");
-
-        
-        for(int j=0;j<n;j++){
-            printf("  %3.3lf  ",*(matlix+(n*i)+j));
-        }
-
-        if(n == 1) printf("|");
-        else if(i==0) printf("\\");
-        else if(i==n-1) printf("/");
-        else printf("|");
-
-        printf("  =  ");
-        printf("%lf",*(b+i));
-        
-        puts("");
-    }
-    puts("");
-}
-
-
-void pivot(int n,int j,double *matlix,double *b){
-    double tmp_matlix;
-    double tmp_b;
+    double b[10] = {2007.0,4105.0,6052.0};
+    double m[10][10];
+    double x[10];
+    double y[10];
+    double sum;
   
-        for(int k=j;k<n;k++){
-            //バブルソース
-            for(int l=k+1;l<n;l++){
-                if(fabs(*(matlix+(n*k)+j)) < fabs(*(matlix+(n*l)+j))){
-                    //配列の入れ替え
-                    tmp_b = *(b+l);
-                    *(b+l) = *(b+k);
-                    *(b+k) = tmp_b;
-                    for(int m=0;m<n;m++){
-                        tmp_matlix = *(matlix+(n*l)+j+m);
-                        *(matlix+(n*l)+j+m) = *(matlix+(n*k)+j+m);
-                        *(matlix+(n*k)+j+m) = tmp_matlix;
-                    }
-                }
-            }
-        }
+    int j, k, l, n;
+    
+    n=3;
 
-}
-void x_calc(double *pMatlix,double *b,int n){
-    double x[3];
-    // double b[3] = *pB;
-    // double matlix[3][3] = *pMatlix;
+                               //Ⅰ//
+                               puts("1");
 
-    for(int i=2;i>=0;i--){
-        double sigma = 0;
-        for(int j=0;j<n;j++){
-            // sigma += matlix[i][j]*x[j];
-            sigma += (*(pMatlix+(n*i)+j))*(x[j]);
-            printf("i = %d j = %d  pMatlix = %lf  x = %lf\n",i,j,*(pMatlix+(i*j)),x[j]);
+    for(l=1;l<n;l++)                              //Ⅱ//
+    {   
+	for(j=l+1;j<=n;j++)
+	{   
+	    m[j][l]=a[j][l]/a[l][l];
+	    for(k=l;k<=n;k++)
+	    {  
+		a[j][k]=a[j][k]-m[j][l]*a[l][k];
+	    }   
+		b[j]=b[j]-m[j][l]*b[l];              //Ⅱ//
+	}   
+    }   
 
-        }
-        // x[i] = (b[i]-sigma)/matlix[i][i];
+    m[1][1]=1;
+    m[1][0]=0;
+    m[1][3]=0;
+    m[2][2]=1;
+    m[2][3]=0;
+    m[3][3]=1;                                    //Ⅱ//
+puts("2");
+    y[1]=b[1];                                    //Ⅲ//
+    y[2]=b[2]-a[2][1]*y[1]; 
+    y[3]=b[3]-a[3][2]*y[2]-a[3][1]*y[1];              //Ⅲ//
+    puts("3");
 
-        printf("x[%d] =   \nALP =  %lf \nsigma = %lf  \nunder = %lf",i,*(b+i),sigma,*(pMatlix+(i*n)+i));
-        x[i] = ((*(b+i))-sigma)/(*(pMatlix+(i*n)+i));
+    for(j=n;j>=1;j--)                               //Ⅳ//
+    {
+	k=j+1;
 
-
-    }
-
-    for(int i=0;i<n;i++){
-        printf("\n%lf\n",x[i]);
-    }
-}
-//
+	if(k>n)
+	{  
+	    x[j]=y[j]/a[j][j];                        //Ⅳ//
+	}   
+	else
+	{  
+	    sum=0;	
+	    for(k=j+1;k<=n;k++)
+	    {  
+		sum=sum+a[j][k]*x[k];
+	    }   
+	    x[j]=(y[j]-sum)/a[j][j];      
+                   //Ⅳ//
+                   
+	}   
+    puts("4");
+	printf("x[%d]=%lf\n", j, x[j]);              //Ⅴ//
+    }   
+    puts("5");
+}   

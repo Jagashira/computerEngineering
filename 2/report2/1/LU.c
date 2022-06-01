@@ -1,65 +1,75 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
-void matlixOuput(int n,double *matlix, double *b);
-void pivot(int n,int j,double *matlix,double *b);
-double *L_calc(int n,double *matlix, double *b);
+#define G 9.8
+#define n 3
 
-int main(){
-    int n = 3;
+void matrixOuput(double *matrix, double *b);
+void pivot(int j,double *matrix,double *b);
+void x_calc(double *matrix,double *b);
+
+int main(int argc, char const *argv[]){
+
     
-    double matlix[3][3] = {
+    double matrix[3][3] = {
         { 1 , -2 ,-3 },
         { 2 , 10 , 1 },
         { 3 , -3 , 4 },
     };
 
-    double b[3] = {2007,4105,6052};
-    double L[3][3];
-    double U[3][3];
-
-    matlixOuput(n,matlix,b);
+    double b[] = {2007,4105,6052};
 
 
-/////////////////////////mの保存  
-    // for(int j=0;j<n;j++){
-    //     pivot(n,j,matlix,b);
-    //     for(int i=j+1;i<n;i++){
-    //         double  m = matlix[i][j]/matlix[j][j];
+    // double matrix[n][n] = {
+    //     { 10 , 0 ,  0 ,     0 , -1 ,  0   ,   0 },
+    //     { 0  , 7 ,  0 ,     0 ,  0 , -1   ,  -1 },
+    //     { 0  , 0 , 20 ,     0 ,  2 , -2   ,   0 },
+    //     { 0  , 0 ,  0 , 7.875 ,  0 , -1.5 , 1.5 },
+    //     { 1  , 0 , -2 ,     0 ,  0 ,  0   ,   0 },
+    //     { 0  , 1 ,  0 , -0.75 ,  0 ,  0   ,   0 },
+    //     { 1  , 2 ,  0 ,     0 ,  0 ,  0   ,   0 },
+    // }; 
 
-    //         for(int k=0;k<n;k++){
-    //             matlix[i][k] -= m * matlix[j][k];
-    //         }
-    //         double tmp = b[i];
-    //         b[i] = b[i] - m*b[j];
+    // double b[] = {-60*G,-7*G,0,0,0,0,0};
+
+    
+
+    puts("original");
+    matrixOuput(*matrix,b);
+
+
+    for(int j=0;j<n;j++){
+        pivot(j,*matrix,b);
+        for(int i=j+1;i<n;i++){
+            double  m = matrix[i][j]/matrix[j][j];
+
+            for(int k=0;k<n;k++){
+                matrix[i][k] -= m * matrix[j][k];
+            }
+            double tmp = b[i];
+            b[i] = b[i] - m*b[j];
+            // matrixOuput(*matrix,b);
             
         
-    //     }
-    // }
-/////////////////////////////
-L_calc(n,matlix,b);
-return 0;
+        }
+    }
+    puts("calclation");
+    matrixOuput(*matrix,b);
 
+    x_calc(*matrix,b);
+
+    return 0;
 }
 
 
 
-void matlixOuput(int n,double *matlix,double *b){
+void matrixOuput(double *matrix,double *b){
 
     for(int i=0;i<n;i++){
-        if(n == 1) printf("|");
-        else if(i==0) printf("/");
-        else if(i==n-1) printf("\\");
-        else printf("|");
-
-        
+    
         for(int j=0;j<n;j++){
-            printf("  %3.3lf  ",*(matlix+(n*i)+j));
+            printf("  %3.3lf  ",*(matrix+(n*i)+j));
         }
-
-        if(n == 1) printf("|");
-        else if(i==0) printf("\\");
-        else if(i==n-1) printf("/");
-        else printf("|");
 
         printf("  =  ");
         printf("%lf",*(b+i));
@@ -70,24 +80,23 @@ void matlixOuput(int n,double *matlix,double *b){
 }
 
 
-
-
-void pivot(int n,int j,double *matlix,double *b){
-    double tmp_matlix;
+void pivot(int j,double *matrix,double *b){
+    double tmp_matrix;
     double tmp_b;
   
         for(int k=j;k<n;k++){
-            //バブルソース
+            
             for(int l=k+1;l<n;l++){
-                if(fabs(*(matlix+(n*k)+j)) < fabs(*(matlix+(n*l)+j))){
-                    //配列の入れ替え
+                if(fabs(*(matrix+(n*k)+j)) < fabs(*(matrix+(n*l)+j))){
+                   
                     tmp_b = *(b+l);
                     *(b+l) = *(b+k);
                     *(b+k) = tmp_b;
                     for(int m=0;m<n;m++){
-                        tmp_matlix = *(matlix+(n*l)+j+m);
-                        *(matlix+(n*l)+j+m) = *(matlix+(n*k)+j+m);
-                        *(matlix+(n*k)+j+m) = tmp_matlix;
+                        tmp_matrix = *(matrix+(n*l)+j+m);
+                        *(matrix+(n*l)+j+m) = *(matrix+(n*k)+j+m);
+                        *(matrix+(n*k)+j+m) = tmp_matrix;
+                        // printf("pivot = %lf  %lf\n",tmp_matrix,*(matrix+(n*k)+j+m));
                     }
                 }
             }
@@ -96,29 +105,20 @@ void pivot(int n,int j,double *matlix,double *b){
 }
 
 
+void x_calc(double *pmatrix,double *b){
+    double x[n] ={};
 
-double *L_calc(int n,double *matlix, double *b){
-    double m_L[3][3] ={};
-    for(int j=0;j<n;j++){
-        pivot(n,j,matlix,b);
-        for(int i=j+1;i<n;i++){
-            double m= (*(matlix+(n*i)+j)) / (*(matlix+(n*j)+j));
+    for(int i=n-1;i>=0;i--){
+        double sigma = 0;
 
-            for(int k=0;k<n;k++){
-                *(matlix+(n*i)+k) -= m* (*(matlix+(j*n)+k));
-            }
-            double tmp = b[i];
-            b[i] = b[i] - m *b[j];
-            
-        
+        for(int j=0;j<n;j++){
+            sigma += (*(pmatrix+(n*i)+j))*x[j];
         }
-    }
-    // for(int i=0;i<3;i++){
-    //     for(int j=0;j<3;j++){
-    //         printf("%lf\n",m_L[i][j]);
-    //     }
-        
-    // }
+        x[i] = ((*(b+i))-sigma)/(*(pmatrix+(i*n)+i));
 
-    return m_L;
+    }
+
+    for(int i=0;i<n;i++){
+        printf("x[%d] = %.2lf\n",i+1,*(x+i));
+    }
 }
