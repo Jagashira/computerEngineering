@@ -5,6 +5,7 @@
 #define max 100
 #define epslon 1.0e-6
 #define a 5 //問題によって、aの値を3,1に変更する
+#define w 0.3
 void matrixOuput(double *matrix, double *b);
 void marginForError(double xNew[3], double xOld[3], int count);
 
@@ -33,19 +34,21 @@ int main()
 
     for (int count = 0; count < max; count++)
     {
+        double xtmp[3];
         error = 0.0;
         for (int i = 0; i < n; i++)
         {
 
-            xNew[i] = b[i];
+            xtmp[i] = b[i];
             for (int j = 0; j < n; j++)
             {
                 if (j != i)
                 {
-                    xNew[i] -= matrix[i][j] * xOld[j];
+                    xtmp[i] -= matrix[i][j] * xNew[j];
                 }
             }
-            xNew[i] = xNew[i] / matrix[i][i];
+            xtmp[i] /= matrix[i][i];
+            xNew[i] = w * xtmp[i] + (1 - w) * xOld[i];
         }
         marginForError(xNew, xOld, count);
 

@@ -33,7 +33,9 @@ int main()
 
     for (int count = 0; count < max; count++)
     {
+
         error = 0.0;
+        // pivot(count, matrix, b, xOld, xNew);
         for (int i = 0; i < n; i++)
         {
 
@@ -42,7 +44,7 @@ int main()
             {
                 if (j != i)
                 {
-                    xNew[i] -= matrix[i][j] * xOld[j];
+                    xNew[i] -= matrix[i][j] * xNew[j];
                 }
             }
             xNew[i] = xNew[i] / matrix[i][i];
@@ -63,7 +65,7 @@ int main()
 
     for (int i = 0; i < n; i++)
     {
-        printf("%8.4f\n", xNew[i]);
+        printf("x[%d] = %8.4f\n", i + 1, xNew[i]);
     }
 
     return 0;
