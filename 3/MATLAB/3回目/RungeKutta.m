@@ -1,3 +1,6 @@
+close all;
+clear;
+clc;
 
 x1 = zeros(1,10);
 x2 = zeros(1,10);
